@@ -5,8 +5,58 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		.reinicia {
+			font-size: 140%;
+			color: white;
+			background-color: rgb(112, 112, 109);
+			border: rgb(112, 112, 109);
+			border-radius: 8px;
+			text-align: center;
+			padding: 8px 15px;
+		}
+		.ascendente, .descendente, .calculArray {
+			font-size: 140%;
+			color: white;
+			background-color: rgb(112, 112, 109);
+			border: rgb(112, 112, 109);
+			border-radius: 8px;
+			text-align: center;
+			padding: 8px 15px;
+			margin-top: 10px;
+		}
+		.table-container {
+			max-width: 600px;
+			margin: 20px auto;
+		}
+		#pokemonTable {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+		}
+		#pokemonTable th, #pokemonTable td {
+			border: none;
+			padding: 10px;
+			text-align: left;
+		}
+		#pokemonTable img {
+			max-width: 50px;
+			max-height: 50px;
+			border-radius: 50%;
+		}
+		.hr-line {
+			border: none;
+			height: 1px;
+			background-color: #ddd;
+			margin: 10px 0;
+		}
+	</style>
 </head>
 <body>
+	<button class="reinicia" onclick="reinicia()">Reinicia</button>
+	<button class="ascendente" onclick="orderList('asc')">Ascendente</button>
+	<button class="descendente" onclick="orderList('desc')">Descendente</button>
+	<button class="calculArray" onclick="calcMitjana()">Calcular Array</button>
 	<div id="resultat"></div>
 	<script src="js/script.js"></script>
 </body>
