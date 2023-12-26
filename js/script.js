@@ -84,3 +84,61 @@ function printList() {
 		table += '</table>';
 		document.getElementById("resultat").innerHTML = table;
   }
+//PART 2: GRAFICA JSON
+let arrayLabelsP = ["Grass","Poison","Fire","Flying","Water","Bug","Normal","Electric","Ground","Fighting","Psychic","Rock","Ice","Ghost","Dragon"];
+let arrayLabelsM = ["Drama","Crime","Action","Thriller","Biography","History","Adventure","Fantasy","Western","Romance","Sci-Fi","Mystery","Comedy","War","Family","Animation","Musical","Music","Horror","Film-Noir","Sport"];
+let arrayDadesGrafPokemons = [14,33,12,19,32,12,24,9,14,8,14,11,5,3,3];
+let arrayDadesGrafMovies = [185,53,39,60,27,15,57,28,8,27,32,33,44,28,25,22,5,8,4,6,10];
+
+let borderColorPokemons = generateRandomColors(arrayLabelsP.length);
+let borderColorMovies = generateRandomColors(arrayLabelsM.length);
+
+let backgroundColorPokemons = borderColorPokemons.map(color => color.replace(")", ", 0.2)"));
+let backgroundColorMovies = borderColorMovies.map(color => color.replace(")", ", 0.2)"));
+
+const config = {
+	type: 'polarArea',
+	data: {
+	  labels: arrayLabelsP,
+	  datasets: [{
+		label: 'Pokémon',
+		data: arrayDadesGrafPokemons,
+		backgroundColor: backgroundColorPokemons,
+		borderColor: borderColorPokemons,
+		borderWidth: 1,
+	  },
+	  {
+		label: 'Pel·lícules',
+		data: arrayDadesGrafMovies,
+		backgroundColor: backgroundColorMovies,
+		borderColor: borderColorMovies,
+		borderWidth: 1,
+	  }],
+	},
+	options: {
+	  scales: {
+		r: {
+		  max: 200,
+		  min: 0,
+		  stepSize: 50,
+		},
+	  },
+	},
+  };
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  const myChart = new Chart(ctx, config);
+
+  function generateRandomColors(count) {
+	const colors = [];
+	for (let i = 0; i < count; i++) {
+	  const randomColor = `rgba(${getRandomNumber(255)}, ${getRandomNumber(255)}, ${getRandomNumber(255)})`;
+	  colors.push(randomColor);
+	}
+	return colors;
+  }
+
+  function getRandomNumber(max) {
+	return Math.floor(Math.random() * (max + 1));
+  }

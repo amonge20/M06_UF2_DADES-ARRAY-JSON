@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<title>Document</title>
 	<style>
 		.reinicia {
@@ -58,6 +59,9 @@
 	<button class="descendente" onclick="orderList('desc')">Descendente</button>
 	<button class="calculArray" onclick="calcMitjana()">Calcular Array</button>
 	<div id="resultat"></div>
+	<div class="chart-container" style="position: relative; width:700px">
+		<canvas id="myChart"></canvas>
+	</div>
 	<script src="js/script.js"></script>
 </body>
 </html>
