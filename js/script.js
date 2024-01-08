@@ -38,7 +38,7 @@ fetch("js/data/movies.json")
 	let moviesArray = movies.map((movie) => movie.title);
 	console.log(moviesArray);
 });
-
+//PART 3: FUNCIONS MODIFICADES
 //PART 1
 //ES REINICIA LA PAGINA WEB CADA COP QUE ES EXECUTI LA FUNCIO
 function reinicia(){
@@ -46,26 +46,34 @@ function reinicia(){
 }
 //Ordre Ascendent o Descendent
 function orderList(orden){
-	let listado;
+	let listado = [...pokemons];
 	switch (orden){
 		case "asc":
-			listado = pokemons;
 			listado.sort((a,b) => a.name.localeCompare(b.name));
 			break;
 		case "desc":
-			listado = pokemons;
 			listado.sort((a, b) => b.name.localeCompare(a.name));
 			break;
 		default:
 			alert("NOPE");
 	}
+	pokemons = listado;
 	printList();
 }
 //Busca la llista del JSON del pokemon, pel·licula, meteorits i municipis
 function  searchList(){
 	let busqueda = prompt("Busca algo?");
-	let resultado = pokemons.findIndex(pokemon => pokemon.name === busqueda);
-	alert(`Elemento en tal posición: ${resultado !== -1 ? resultado : "NOT FOUND"}`);
+	let resultado = false;
+
+	pokemons.forEach((pokemon, index) => {
+		if (pokemon.name.toLowerCase().includes(busqueda.toLowerCase())){
+			alert("Elemento de posicion ${index}");
+			resultado = true;
+		} else {
+			alert("NOPE");
+			resultado = false;
+		}
+	});
 }
 //Array multidimensional
 //Per calcular la mitjana amb un array JSON
@@ -77,13 +85,15 @@ function calcMitjana(){
 //Funcio per a que es mostri la taula del JSON amb el DOM
 function printList() {
 	let table = '<table id="pokemonTable" style="border-collapse: collapse; width: 100%;"><tr><th>ID</th><th>Imagen</th><th>Nombre</th><th>Peso</th></tr>';
-		pokemons.forEach(pokemon => {
-			let pesoNumericoPokemon = parseFloat(pokemon.weight);
-			table += `<tr><td>${pokemon.id}</td><td><img src="${pokemon.img}" alt="${pokemon.name}" style="max-width: 50px; max-height: 50px;"></td><td>${pokemon.name}</td><td>${isNaN(pesoNumericoPokemon) ? 0 : pesoNumericoPokemon.toFixed(2)}</td></tr>`;
-		});
-		table += '</table>';
-		document.getElementById("resultat").innerHTML = table;
-  }
+	  
+	pokemons.forEach((pokemon) => {
+	  let pesoNumericoPokemon = parseFloat(pokemon.weight);
+	  table += `<tr><td>${pokemon.id}</td><td><img src="${pokemon.img}" alt="${pokemon.name}" style="max-width: 50px; max-height: 50px;"></td><td>${pokemon.name}</td><td>${isNaN(pesoNumericoPokemon) ? 0 : pesoNumericoPokemon.toFixed(2)}</td></tr>`;
+	});
+	  
+	table += '</table>';
+	document.getElementById("resultat").innerHTML = table;
+}
 //PART 2: GRAFICA JSON
 let arrayLabelsP = ["Grass","Poison","Fire","Flying","Water","Bug","Normal","Electric","Ground","Fighting","Psychic","Rock","Ice","Ghost","Dragon"];
 let arrayLabelsM = ["Drama","Crime","Action","Thriller","Biography","History","Adventure","Fantasy","Western","Romance","Sci-Fi","Mystery","Comedy","War","Family","Animation","Musical","Music","Horror","Film-Noir","Sport"];
