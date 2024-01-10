@@ -38,7 +38,6 @@ fetch("js/data/movies.json")
 	let moviesArray = movies.map((movie) => movie.title);
 	console.log(moviesArray);
 });
-//PART 3: FUNCIONS MODIFICADES
 //PART 1
 //ES REINICIA LA PAGINA WEB CADA COP QUE ES EXECUTI LA FUNCIO
 function reinicia(){
@@ -74,7 +73,25 @@ function  searchList(){
 			resultado = false;
 		}
 	});
+	//Modificacio Part 3
+	let inputSearch = document.getElementById('txtSearch');
+	inputSearch.addEventListener('input', (e) => {
+		console.log(inputSearch);
+	});
 }
+
+function filterList(inputSearch){
+	let pokemonsFiltrados = pokemons.filter((pokemon) =>
+		pokemon.name.toLowerCase().includes(inputSearch));
+
+		if (pokemonsFiltrados.length > 0){
+			console.log(pokemonsFiltrados);
+			printList(pokemonsFiltrados);
+		} else {
+			console.log("NOPE")
+		}
+}
+
 //Array multidimensional
 //Per calcular la mitjana amb un array JSON
 function calcMitjana(){
@@ -139,13 +156,13 @@ const config = {
   const ctx = document.getElementById('myChart').getContext('2d');
 
   const myChart = new Chart(ctx, config);
-
-  function generateRandomColors(count) {
+//Modificacio Part 3
+function generateRandomColors(count) {
 	const colors = [];
-	for (let i = 0; i < count; i++) {
-	  const randomColor = `rgba(${getRandomNumber(255)}, ${getRandomNumber(255)}, ${getRandomNumber(255)})`;
-	  colors.push(randomColor);
-	}
+	Array.from({ length:count }).forEach(() => {
+		const randomColor = `rgba(${getRandomNumber(255)}, ${getRandomNumber(255)}, ${getRandomNumber(255)})`;
+	    colors.push(randomColor);
+	});
 	return colors;
   }
 
