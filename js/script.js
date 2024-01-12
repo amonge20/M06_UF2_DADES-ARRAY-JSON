@@ -1,6 +1,5 @@
 //VARIABLES JSON
 let pokemons, municipis, meteorits, movies;
-
 //PART 0
 // POKEMONS
 fetch("js/data/pokemon.json")
@@ -11,7 +10,6 @@ fetch("js/data/pokemon.json")
 	console.log(pokemonArray);
 	printList();
 });
-
 // MUNICIPIS
 fetch("js/data/municipis.json")
 .then((response) => response.json())
@@ -20,7 +18,6 @@ fetch("js/data/municipis.json")
 	let municipisArray = municipis.map((municipi) => municipi.municipi_nom);
 	console.log(municipisArray);
 });
-
 // METEORITS
 fetch("js/data/earthMeteorites.json")
 .then((response) => response.json())
@@ -29,7 +26,6 @@ fetch("js/data/earthMeteorites.json")
 	let meteoritsArray = meteorits.map((meteorits) => meteorits.name);
 	console.log(meteoritsArray);
 });
-
 // MOVIES
 fetch("js/data/movies.json")
 .then((response) => response.json())
@@ -47,39 +43,41 @@ function reinicia(){
 function orderList(orden){
 	let listado = [...pokemons];
 	switch (orden){
+		//Si es selecciona el boto ascendent, es mostrara la taula de forma ascendent
 		case "asc":
 			listado.sort((a,b) => a.name.localeCompare(b.name));
 			break;
+		//O sino, fará lo contrari
 		case "desc":
 			listado.sort((a, b) => b.name.localeCompare(a.name));
 			break;
 		default:
 			alert("NOPE");
 	}
+	//Es mostrara tots els pokemons
 	pokemons = listado;
 	printList();
 }
-//Busca la llista del JSON del pokemon, pel·licula, meteorits i municipis
+//Busca la llista del JSON del pokemon, pel·licula, meteorits i municipis (En principi el JSON de Pokemons)
 function  searchList(){
 	let busqueda = prompt("Busca algo?");
 	let resultado = false;
-
+	//Per cada element, es buscara el pokemon que has buscat. Posara la posicio en la que estigui el pokemon buscat
 	pokemons.forEach((pokemon, index) => {
 		if (pokemon.name.toLowerCase().includes(busqueda.toLowerCase())){
-			alert("Elemento de posicion ${index}");
+			alert(`Elemento de posicion ${index}`);
 			resultado = true;
-		} else {
+		} if(!resultado) {
 			alert("NOPE");
-			resultado = false;
 		}
 	});
-	//Modificacio Part 3
+	//Modificacio Part 3: Le afegirem una variable per el DOM de busqueda
 	let inputSearch = document.getElementById('txtSearch');
 	inputSearch.addEventListener('input', (e) => {
-		console.log(inputSearch);
+		console.log(inputSearch.value);
 	});
 }
-
+//Filtara la llista dels pokemon, el "inputSearch" ho agafara dela funcio anterior
 function filterList(inputSearch){
 	let pokemonsFiltrados = pokemons.filter((pokemon) =>
 		pokemon.name.toLowerCase().includes(inputSearch));
@@ -88,10 +86,9 @@ function filterList(inputSearch){
 			console.log(pokemonsFiltrados);
 			printList(pokemonsFiltrados);
 		} else {
-			console.log("NOPE")
+			console.log("NOPE");
 		}
 }
-
 //Array multidimensional
 //Per calcular la mitjana amb un array JSON
 function calcMitjana(){
@@ -156,7 +153,7 @@ const config = {
   const ctx = document.getElementById('myChart').getContext('2d');
 
   const myChart = new Chart(ctx, config);
-//Modificacio Part 3
+//Modificacio Part 3: Generacio dels colors aleatoris
 function generateRandomColors(count) {
 	const colors = [];
 	Array.from({ length:count }).forEach(() => {
@@ -165,7 +162,7 @@ function generateRandomColors(count) {
 	});
 	return colors;
   }
-
+//La funcio dels numeros aleatoris es agafa dela funcio anterior, es a dir, el dels colors
   function getRandomNumber(max) {
 	return Math.floor(Math.random() * (max + 1));
   }
