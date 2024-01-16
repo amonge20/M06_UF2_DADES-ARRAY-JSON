@@ -81,12 +81,12 @@ function  searchList(){
 function filterList(inputSearch){
 	let pokemonsFiltrados = pokemons.filter((pokemon) =>
 		pokemon.name.toLowerCase().includes(inputSearch));
-
+		//Si els numeros de Pokemons filtrats supera a 0. Es mostrara tots els Pokemons. Per el cas contrari, es mostrara un NO
 		if (pokemonsFiltrados.length > 0){
 			console.log(pokemonsFiltrados);
 			printList(pokemonsFiltrados);
 		} else {
-			console.log("NOPE");
+			console.log("NO");
 		}
 }
 //Array multidimensional
@@ -98,25 +98,27 @@ function calcMitjana(){
 }
 //Funcio per a que es mostri la taula del JSON amb el DOM
 function printList() {
+	//Es crea la taula
 	let table = '<table id="pokemonTable" style="border-collapse: collapse; width: 100%;"><tr><th>ID</th><th>Imagen</th><th>Nombre</th><th>Peso</th></tr>';
-	  
+	//Per cada Pokémon es mostrara una columna amb les dades del Pokémon corresponenet
 	pokemons.forEach((pokemon) => {
 	  let pesoNumericoPokemon = parseFloat(pokemon.weight);
 	  table += `<tr><td>${pokemon.id}</td><td><img src="${pokemon.img}" alt="${pokemon.name}" style="max-width: 50px; max-height: 50px;"></td><td>${pokemon.name}</td><td>${isNaN(pesoNumericoPokemon) ? 0 : pesoNumericoPokemon.toFixed(2)}</td></tr>`;
 	});
-	  
+	//Es declara el DOM dela taula del Pokémons JSON
 	table += '</table>';
 	document.getElementById("resultat").innerHTML = table;
 }
 //PART 2: GRAFICA JSON
+//Es crean variables per les dades de la columna
 let arrayLabelsP = ["Grass","Poison","Fire","Flying","Water","Bug","Normal","Electric","Ground","Fighting","Psychic","Rock","Ice","Ghost","Dragon"];
 let arrayLabelsM = ["Drama","Crime","Action","Thriller","Biography","History","Adventure","Fantasy","Western","Romance","Sci-Fi","Mystery","Comedy","War","Family","Animation","Musical","Music","Horror","Film-Noir","Sport"];
 let arrayDadesGrafPokemons = [14,33,12,19,32,12,24,9,14,8,14,11,5,3,3];
 let arrayDadesGrafMovies = [185,53,39,60,27,15,57,28,8,27,32,33,44,28,25,22,5,8,4,6,10];
-
+//Les variables agafaran un color aleatori en una funcio dels colors aleatoris
 let borderColorPokemons = generateRandomColors(arrayLabelsP.length);
 let borderColorMovies = generateRandomColors(arrayLabelsM.length);
-
+//Es asignara 
 let backgroundColorPokemons = borderColorPokemons.map(color => color.replace(")", ", 0.2)"));
 let backgroundColorMovies = borderColorMovies.map(color => color.replace(")", ", 0.2)"));
 

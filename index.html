@@ -7,16 +7,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<title>Document</title>
 	<style>
-		.reinicia {
-			font-size: 140%;
-			color: white;
-			background-color: rgb(112, 112, 109);
-			border: rgb(112, 112, 109);
-			border-radius: 8px;
-			text-align: center;
-			padding: 8px 15px;
-		}
-		.ascendente, .descendente, .calculArray, .buscar {
+		.reinicia, .ascendente, .descendente, .calculArray, .buscar, #txtSearch {
 			font-size: 140%;
 			color: white;
 			background-color: rgb(112, 112, 109);
@@ -25,6 +16,7 @@
 			text-align: center;
 			padding: 8px 15px;
 			margin-top: 10px;
+			display: none;
 		}
 		.table-container {
 			max-width: 600px;
@@ -51,6 +43,12 @@
 			background-color: #ddd;
 			margin: 10px 0;
 		}
+		#resultat {
+			display: none;
+		}
+		/*#chart-container {
+			display: none;
+		}*/
 	</style>
 </head>
 <body>
