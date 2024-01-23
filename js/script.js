@@ -1,170 +1,323 @@
-//VARIABLES JSON
+//DECLARANT VARIABLES PER CONVERTIR EL JSON EN ARRAY
 let pokemons, municipis, meteorits, movies;
-//PART 0
-// POKEMONS
-fetch("js/data/pokemon.json")
-.then((response) => response.json())
-.then((data) => {
-	pokemons = data.pokemon;
-	let pokemonArray = pokemons.map((pokemon) => pokemon.name);
-	console.log(pokemonArray);
-	printList();
-});
-// MUNICIPIS
-fetch("js/data/municipis.json")
-.then((response) => response.json())
-.then((data) => {
-	municipis = data.elements;
-	let municipisArray = municipis.map((municipi) => municipi.municipi_nom);
-	console.log(municipisArray);
-});
-// METEORITS
-fetch("js/data/earthMeteorites.json")
-.then((response) => response.json())
-.then((data) => {
-	meteorits = data;
-	let meteoritsArray = meteorits.map((meteorits) => meteorits.name);
-	console.log(meteoritsArray);
-});
-// MOVIES
-fetch("js/data/movies.json")
-.then((response) => response.json())
-.then((data) => {
-	movies = data.movies;
-	let moviesArray = movies.map((movie) => movie.title);
-	console.log(moviesArray);
-});
-//PART 1
-//ES REINICIA LA PAGINA WEB CADA COP QUE ES EXECUTI LA FUNCIO
-function reinicia(){
-	location.reload();
+//ARRAY MULTIDIMENSIONAL
+let pokemonData = [];
+let municipisData = [];
+let earthMeteoritesData = [];
+let moviesData = [];
+//FUNCIÓ QUE SELECCIONA LA TAULA PER A SELECCIONAR EL JSON
+function TablaSeleccionada() {
+    let opcioSeleccionada = document.querySelector('input[name="categoria"]:checked').value;
+    //SELECCIÓ DE LA CATEGORIA
+    switch (opcioSeleccionada) {
+        //POKEMONS
+        case 'pokemons':
+            fetch("js/data/pokemon.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    pokemons = data.pokemon;
+                    pokemonData = pokemons.map((pokemon) => ({
+                        id: pokemon.id,
+                        img: pokemon.img,
+                        name: pokemon.name,
+                        weight: pokemon.weight
+                    }));
+                    //MOSTRA LA TAULA DE POKEMONS
+                    printList(pokemonData, 'pokemons');
+                });
+            break;
+        case 'municipis':
+            fetch("js/data/municipis.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    municipis = data.elements;
+                    municipisData = municipis.map((municipi) => ({
+                        ine: municipi.ine,
+                        municipi_nom: municipi.municipi_nom,
+                        municipi_escut: municipi.municipi_escut,
+                        nombre_habitants: municipi.nombre_habitants
+                    }));
+                    //MOSTRA LA TAULA DE MUNICIPIS
+                    printList(municipisData, 'municipis');
+                });
+            break;
+        case 'meteorits':
+            fetch("js/data/earthMeteorites.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    earthMeteoritesData = data;
+                    //MOSTRA LA TAULA DE METEORITS
+                    printList(earthMeteoritesData, 'meteorits');
+                });
+            break;
+        case 'pelicules':
+            fetch("js/data/movies.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    moviesData = data.movies;
+                    //MOSTRA LA TAULA DE PEL·LÍCULES
+                    printList(moviesData, 'pelicules');
+                });
+            break;
+    }
 }
-//Ordre Ascendent o Descendent
-function orderList(orden){
-	let listado = [...pokemons];
-	switch (orden){
-		//Si es selecciona el boto ascendent, es mostrara la taula de forma ascendent
-		case "asc":
-			listado.sort((a,b) => a.name.localeCompare(b.name));
-			break;
-		//O sino, fará lo contrari
-		case "desc":
-			listado.sort((a, b) => b.name.localeCompare(a.name));
-			break;
-		default:
-			alert("NOPE");
-	}
-	//Es mostrara tots els pokemons
-	pokemons = listado;
-	printList();
+//FUNCIO QUE REINICIA LA PÀGINA CADA VEGADA QUE ES PREM EL BOTÓ
+function reinicia() {
+    location.reload();
 }
-//Busca la llista del JSON del pokemon, pel·licula, meteorits i municipis (En principi el JSON de Pokemons)
-function  searchList(){
-	let busqueda = prompt("Busca algo?");
-	let resultado = false;
-	//Per cada element, es buscara el pokemon que has buscat. Posara la posicio en la que estigui el pokemon buscat
-	pokemons.forEach((pokemon, index) => {
-		if (pokemon.name.toLowerCase().includes(busqueda.toLowerCase())){
-			alert(`Elemento de posicion ${index}`);
-			resultado = true;
-		} if(!resultado) {
-			alert("NOPE");
-		}
-	});
-	//Modificacio Part 3: Le afegirem una variable per el DOM de busqueda
-	let inputSearch = document.getElementById('txtSearch');
-	inputSearch.addEventListener('input', (e) => {
-		console.log(inputSearch.value);
-	});
+//QUAN CLIQUES EL TEXT <TH>, ES ORDENARA DE FORMA ASCENDENT O DESCENDENT
+function orderList(column) {
+    let opcioSeleccionada = document.querySelector('input[name="categoria"]:checked').value;
+    let data, tableType;
+    //Selecciona les dades i el tipus de taula segons l'opció seleccionada
+    switch (opcioSeleccionada) {
+        case 'pokemons':
+            data = pokemonData;
+            tableType = 'pokemons';
+            break;
+        case 'municipis':
+            data = municipisData;
+            tableType = 'municipis';
+            break;
+        case 'meteorits':
+            data = earthMeteoritesData;
+            tableType = 'meteorits';
+            break;
+        case 'pelicules':
+            data = moviesData;
+            tableType = 'pelicules';
+            break;
+        default:
+            data = [];
+            tableType = '';
+            break;
+    }
+    //Si la columna actual és la mateixa que la anterior, alterna entre asc i desc
+    if (column === window.columnaReciente) {
+        window.orderType = window.orderType === 'asc' ? 'desc' : 'asc';
+    } else {
+        window.columnaReciente = column;
+        window.orderType = 'asc';
+    }
+    //Ordena les dades segons la columna i el tipus d'ordre
+    data.sort((a, b) => {
+        let opcioA = a[column];
+        let opcioB = b[column];
+        // Realitza la comparació segons el tipus de dada
+        if (typeof opcioA === 'string') {
+            return opcioA.localeCompare(opcioB);
+        } else {
+            return opcioA - opcioB;
+        }
+    });
+    //Si el tipus d'ordre és descendent, inverteix l'array ordenat
+    if (window.orderType === 'desc') {
+        data.reverse();
+    }
+    //Mostra la taula actualitzada
+    printList(data, tableType);
 }
-//Filtara la llista dels pokemon, el "inputSearch" ho agafara dela funcio anterior
-function filterList(inputSearch){
-	let pokemonsFiltrados = pokemons.filter((pokemon) =>
-		pokemon.name.toLowerCase().includes(inputSearch));
-		//Si els numeros de Pokemons filtrats supera a 0. Es mostrara tots els Pokemons. Per el cas contrari, es mostrara un NO
-		if (pokemonsFiltrados.length > 0){
-			console.log(pokemonsFiltrados);
-			printList(pokemonsFiltrados);
-		} else {
-			console.log("NO");
-		}
+//QUAN ES POSA EL QUE VOLS BUSCAR, ES FILTRARÀ LO SEGÜENT
+function searchList() {
+    let opcioSeleccionada = document.querySelector('input[name="categoria"]:checked').value;
+    let data, tableType;
+    //Selecciona les dades i el tipus de taula segons l'opció seleccionada
+    switch (opcioSeleccionada) {
+        case 'pokemons':
+            data = pokemonData;
+            tableType = 'pokemons';
+            break;
+        case 'municipis':
+            data = municipisData;
+            tableType = 'municipis';
+            break;
+        case 'meteorits':
+            data = earthMeteoritesData;
+            tableType = 'meteorits';
+            break;
+        case 'pelicules':
+            data = moviesData;
+            tableType = 'pelicules';
+            break;
+        default:
+            data = [];
+            tableType = '';
+            break;
+    }
+    //Obté el valor del cuadre de búsqueda
+    let inputSearch = document.getElementById('txtSearch').value.toLowerCase();
+    //Filtra las dades segons el valor de cerca
+    let dadesFiltrades = data.filter(item => {
+        for (const key in item) {
+            if (item.hasOwnProperty(key) && typeof item[key] === 'string' && item[key].toLowerCase().includes(inputSearch)) {
+                return true;
+            }
+        }
+        return false;
+    });
+    //Ordena les dades segons la columna i el tipus d'ordre
+    dadesFiltrades.sort((a, b) => {
+        const opcioA = a[window.columnaReciente];
+        const opcioB = b[window.columnaReciente];
+        //Realitza la comparació segons el tipus de dada
+        if (typeof opcioA === 'string') {
+            return opcioA.localeCompare(opcioB);
+        } else {
+            return opcioA - opcioB;
+        }
+    });
+    //Si el tipus d'ordre és descendent, inverteix l'array ordenat
+    if (window.orderType === 'desc') {
+        dadesFiltrades.reverse();
+    }
+    //Mostra la taula actualitzada
+    printList(dadesFiltrades, tableType);
 }
-//Array multidimensional
-//Per calcular la mitjana amb un array JSON
-function calcMitjana(){
-	let caracteristicasPokemon = pokemons[pokemons.length - 1].weight;
-	let pesoNumericoPokemon = parseFloat(caracteristicasPokemon);
-	alert(`Media del ultimo bloque añadido: ${isNaN(pesoNumericoPokemon) ? 0 : pesoNumericoPokemon.toFixed(2)}`);
+//CALCULARÀ LA MITJANA DEL PES, HABITANTS, VALORACIÓ, ETC.
+function calcMitjana(column) {
+    let opcioSeleccionada = document.querySelector('input[name="categoria"]:checked').value;
+    let data, tableType;
+    //Selecciona les dades i el tipus de taula segons l'opció seleccionada
+    switch (opcioSeleccionada) {
+        case 'pokemons':
+            data = pokemonData;
+            tableType = 'pokemons';
+            break;
+        case 'municipis':
+            data = municipisData;
+            tableType = 'municipis';
+            break;
+        case 'meteorits':
+            data = earthMeteoritesData;
+            tableType = 'meteorits';
+            break;
+        case 'pelicules':
+            data = moviesData;
+            tableType = 'pelicules';
+            break;
+        default:
+            data = [];
+            tableType = '';
+            break;
+    }
+    //Calcula la mitjana de la columna
+    const columnData = data.map(item => parseFloat(item[column]) || 0); 
+    const average = columnData.reduce((sum, value) => sum + value, 0) / columnData.length;
+    //Mostra la taula actualitzada
+    printList(data, tableType);
+    //Resultat de la mitja quan cliques una dels <th>
+    alert(`Mitjana de ${column}: ${average.toFixed(2)}`);
 }
-//Funcio per a que es mostri la taula del JSON amb el DOM
-function printList() {
-	//Es crea la taula
-	let table = '<table id="pokemonTable" style="border-collapse: collapse; width: 100%;"><tr><th>ID</th><th>Imagen</th><th>Nombre</th><th>Peso</th></tr>';
-	//Per cada Pokémon es mostrara una columna amb les dades del Pokémon corresponenet
-	pokemons.forEach((pokemon) => {
-	  let pesoNumericoPokemon = parseFloat(pokemon.weight);
-	  table += `<tr><td>${pokemon.id}</td><td><img src="${pokemon.img}" alt="${pokemon.name}" style="max-width: 50px; max-height: 50px;"></td><td>${pokemon.name}</td><td>${isNaN(pesoNumericoPokemon) ? 0 : pesoNumericoPokemon.toFixed(2)}</td></tr>`;
-	});
-	//Es declara el DOM dela taula del Pokémons JSON
-	table += '</table>';
-	document.getElementById("resultat").innerHTML = table;
+//MOSTRA LA TAULA DEL JSON SELECCIONAT
+function printList(tableData, tableType) {
+    let tablaJSON = '<table>';
+    switch (tableType) {
+        case 'pokemons':
+            tablaJSON += '<tr><th onclick="orderList(\'id\')">ID</th><th>Imagen</th><th onclick="orderList(\'name\')">Nom</th><th onclick="calcMitjana(\'weight\')">Peso</th></tr>';
+            tableData.forEach(function (pokemon) {
+                tablaJSON += '<tr>';
+                tablaJSON += '<td>' + pokemon.id + '</td>';
+                tablaJSON += '<td><img src="' + pokemon.img + '"></td>';
+                tablaJSON += '<td>' + pokemon.name + '</td>';
+                tablaJSON += '<td>' + pokemon.weight + '</td>';
+                tablaJSON += '</tr>';
+            });
+            break;
+        case 'municipis':
+            tablaJSON += '<tr><th onclick="orderList(\'ine\')">Codigo Postal</th><th onclick="orderList(\'municipi_nom\')">Municipio</th><th>Escudo Municipio</th><th onclick="calcMitjana(\'nombre_habitants\')">habitantes</th></tr>';
+            tableData.forEach(function (municipi) {
+                tablaJSON += '<tr>';
+                tablaJSON += '<td>' + municipi.ine + '</td>';
+                tablaJSON += '<td>' + municipi.municipi_nom + '</td>';
+                tablaJSON += '<td><img src="' + municipi.municipi_escut + '"></td>';
+                tablaJSON += '<td>' + municipi.nombre_habitants + '</td>';
+                tablaJSON += '</tr>';
+            });
+            break;
+        case 'meteorits':
+            tablaJSON += '<tr><th onclick="orderList(\'id\')">ID</th><th onclick="orderList(\'name\')">Nombre</th><th onclick="calcMitjana(\'reclat\')">Reclat</th><th onclick="calcMitjana(\'reclong\')">Reclong</th></tr>';
+            tableData.forEach(function (earthMeteorit) {
+                tablaJSON += '<tr>';
+                tablaJSON += '<td>' + earthMeteorit.id + '</td>';
+                tablaJSON += '<td>' + earthMeteorit.name + '</td>';
+                tablaJSON += '<td>' + earthMeteorit.reclat + '</td>';
+                tablaJSON += '<td>' + earthMeteorit.reclong + '</td>';
+                tablaJSON += '</tr>';
+            });
+            break;
+        case 'pelicules':
+            tablaJSON += '<tr><th onclick="orderList(\'title\')">Nombre dela pelicula</th><th>Poster</th><th>Genero</th><th onclick="calcMitjana(\'rating\')">Valoración</th></tr>';
+            tableData.forEach(function (movie) {
+                tablaJSON += '<tr>';
+                tablaJSON += '<td>' + movie.title + '</td>';
+                tablaJSON += '<td><img src="' + movie.url + '" alt="Cartell"></td>';
+                tablaJSON += '<td>' + movie.genres.join(', ') + '</td>';
+                tablaJSON += '<td>' + movie.rating + '</td>';
+                tablaJSON += '</tr>';
+            });
+            break;
+    }
+    tablaJSON += '</table>';
+    document.getElementById('resultat').innerHTML = tablaJSON;
 }
-//PART 2: GRAFICA JSON
-//Es crean variables per les dades de la columna
-let arrayLabelsP = ["Grass","Poison","Fire","Flying","Water","Bug","Normal","Electric","Ground","Fighting","Psychic","Rock","Ice","Ghost","Dragon"];
-let arrayLabelsM = ["Drama","Crime","Action","Thriller","Biography","History","Adventure","Fantasy","Western","Romance","Sci-Fi","Mystery","Comedy","War","Family","Animation","Musical","Music","Horror","Film-Noir","Sport"];
-let arrayDadesGrafPokemons = [14,33,12,19,32,12,24,9,14,8,14,11,5,3,3];
-let arrayDadesGrafMovies = [185,53,39,60,27,15,57,28,8,27,32,33,44,28,25,22,5,8,4,6,10];
-//Les variables agafaran un color aleatori en una funcio dels colors aleatoris
-let borderColorPokemons = generateRandomColors(arrayLabelsP.length);
-let borderColorMovies = generateRandomColors(arrayLabelsM.length);
-//Es asignara 
-let backgroundColorPokemons = borderColorPokemons.map(color => color.replace(")", ", 0.2)"));
-let backgroundColorMovies = borderColorMovies.map(color => color.replace(")", ", 0.2)"));
-
+//DADES DELA GRAFICA JSON DE POKEMONS
+let pokemonTipo = ["Grass", "Poison", "Fire", "Flying", "Water", "Bug", "Normal", "Electric", "Ground", "Fighting", "Psychic", "Rock", "Ice", "Ghost", "Dragon"];
+let pokemonTipoNumerico = [14, 33, 12, 19, 32, 12, 24, 9, 14, 8, 14, 11, 5, 3, 3];
+//COLORS PER LA GRAFICA JSON DE POKEMONS
+let pokemonColorBorde = Array.from({ length: pokemonTipo.length }, () => ColorAleatorio());
+let pokemonColorFondo = pokemonColorBorde.map(color => color.replace(")", ", 0.2)"));
+//CREACIO DELA GRAFICA JSON DE POKEMONS
 const config = {
-	type: 'polarArea',
-	data: {
-	  labels: arrayLabelsP,
-	  datasets: [{
-		label: 'Pokémon',
-		data: arrayDadesGrafPokemons,
-		backgroundColor: backgroundColorPokemons,
-		borderColor: borderColorPokemons,
-		borderWidth: 1,
-	  },
-	  {
-		label: 'Pel·lícules',
-		data: arrayDadesGrafMovies,
-		backgroundColor: backgroundColorMovies,
-		borderColor: borderColorMovies,
-		borderWidth: 1,
-	  }],
-	},
-	options: {
-	  scales: {
-		r: {
-		  max: 200,
-		  min: 0,
-		  stepSize: 50,
-		},
-	  },
-	},
-  };
+    type: 'polarArea',
+    data: {
+        labels: pokemonTipo,
+        datasets: [{
+            label: 'Pokemons',
+            data: pokemonTipoNumerico,
+            backgroundColor: pokemonColorFondo,
+            borderColor: pokemonColorBorde,
+            borderWidth: 1
+        }],
+    },
+};
+//CREA LA GRAFICA DELA GRAFICA JSON DE POKEMONS
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, config);
+//FUNCIO PER OBTENIR UN COLOR ALEATORI EN FORMAT RGBA
+function ColorAleatorio() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgba(${r},${g},${b})`;
+}
+//MOSTRAR O AMAGAR LA TAULA O GRAFICA DEL JSON POKEMON
+document.addEventListener("DOMContentLoaded", function () {
+    const tablaPokemon = document.getElementById('resultat');
+    const graficaPokemon = document.querySelector('.chart-container');
+    const botonTablaGrafica = document.querySelector('button');
+    graficaPokemon.style.display = 'none';
+    botonTablaGrafica.style.display = 'block';
+    document.querySelector('input[name="categoria"]').addEventListener('change', function () {
+        if (this.value === 'pokemons') {
+            botonTablaGrafica.style.display = 'none';
+        } else {
+            botonTablaGrafica.style.display = 'block';
+        }
+    });
+});
+//FUNCIO PER AMAGAR O PER MOSTRAR TAULA/GRAFICA
+function MostrarOcultar() {
+    const tablaPokemon = document.getElementById('resultat');
+    const graficaPokemon = document.querySelector('.chart-container');
+    const botonTablaGrafica = document.querySelector('button');
 
-  const ctx = document.getElementById('myChart').getContext('2d');
-
-  const myChart = new Chart(ctx, config);
-//Modificacio Part 3: Generacio dels colors aleatoris
-function generateRandomColors(count) {
-	const colors = [];
-	Array.from({ length:count }).forEach(() => {
-		const randomColor = `rgba(${getRandomNumber(255)}, ${getRandomNumber(255)}, ${getRandomNumber(255)})`;
-	    colors.push(randomColor);
-	});
-	return colors;
-  }
-//La funcio dels numeros aleatoris es agafa dela funcio anterior, es a dir, el dels colors
-  function getRandomNumber(max) {
-	return Math.floor(Math.random() * (max + 1));
-  }
+    if (graficaPokemon.style.display !== 'none') {
+        tablaPokemon.style.display = 'block';
+        graficaPokemon.style.display = 'none';
+        botonTablaGrafica.style.display = 'block';
+    } else {
+        tablaPokemon.style.display = 'none';
+        graficaPokemon.style.display = 'block';
+        botonTablaGrafica.style.display = 'none';
+    }
+}

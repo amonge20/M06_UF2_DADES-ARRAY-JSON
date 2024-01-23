@@ -4,61 +4,26 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<title>Document</title>
-	<style>
-		.reinicia, .ascendente, .descendente, .calculArray, .buscar, #txtSearch {
-			font-size: 140%;
-			color: white;
-			background-color: rgb(112, 112, 109);
-			border: rgb(112, 112, 109);
-			border-radius: 8px;
-			text-align: center;
-			padding: 8px 15px;
-			margin-top: 10px;
-			display: none;
-		}
-		.table-container {
-			max-width: 600px;
-			margin: 20px auto;
-		}
-		#pokemonTable {
-			width: 100%;
-			border-collapse: collapse;
-			margin-top: 10px;
-		}
-		#pokemonTable th, #pokemonTable td {
-			border: none;
-			padding: 10px;
-			text-align: left;
-		}
-		#pokemonTable img {
-			max-width: 50px;
-			max-height: 50px;
-			border-radius: 50%;
-		}
-		.hr-line {
-			border: none;
-			height: 1px;
-			background-color: #ddd;
-			margin: 10px 0;
-		}
-		#resultat {
-			display: none;
-		}
-		/*#chart-container {
-			display: none;
-		}*/
-	</style>
+	<!--Afegeix la llibreria per la grafica JSON-->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-	<button class="reinicia" onclick="reinicia()">Reinicia</button>
-	<button class="ascendente" onclick="orderList('asc')">Ascendente</button>
-	<button class="descendente" onclick="orderList('desc')">Descendente</button>
-	<button class="calculArray" onclick="calcMitjana()">Calcular Array</button>
-	<button class="buscar" onclick="searchList()">Buscar</button>
-	<input type="text" value="" id="txtSearch" />
-	<button class="buscar" onclick="filterList()">Buscar</button>
+	<!--Seleccio de les taules del JSON-->
+	<form onchange="TablaSeleccionada()">
+		<input type="radio" id="pokemons" name="categoria" value="pokemons" checked>
+		<label for="pokemons">Pokemons</label>
+		<input type="radio" id="municipis" name="categoria" value="municipis">
+		<label for="municipis">Municipis</label>
+		<input type="radio" id="meteorits" name="categoria" value="meteorits">
+		<label for="meteorits">Meteorits</label>
+		<input type="radio" id="pelicules" name="categoria" value="pelicules">
+		<label for="pelicules">Pelicul·les</label>
+	</form>
+	<!--Botons per interectuar en les taules-->
+	<button onclick="reinicia()">Reinicia</button>
+	<button onclick="MostrarOcultar()">Tabla/Grafica (Solo Pokemons)</button>
+	<input type="text" value="" id="txtSearch" oninput="searchList()"/>
 	<div id="resultat"></div>
 	<div class="chart-container" style="position: relative; width:700px">
 		<canvas id="myChart"></canvas>
